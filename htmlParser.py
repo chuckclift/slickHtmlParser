@@ -7,6 +7,7 @@ def get_urls(html):
     html_urls = []
     
     # getting the urls from the html document    
+                              
     for a in anchor_list:
         url_beginning = a.find("href=") + 6
  
@@ -39,44 +40,20 @@ def get_urls(html):
         
     
 def get_paragraphs(html):    
-    pContent = ""
-
-    ##getting everything that is inside of the p tags
-    while True:
-        tagOpen = html.find("<p")
-        tagClose = html.find("</p")
-
-        pContent = pContent + html[tagOpen:tagClose]
-        html = html[tagClose + 3:]
-
-        if tagClose == -1:
-            break
-
-    ##getting rid of all tags so the text is readable
-    while True:
-        tagOpen = pContent.find("<")
-        tagClose = pContent.find(">")
-
-        if tagOpen == 0:
-            pContent = pContent[tagClose + 1:]
-            
-        elif tagClose < tagOpen:
-            pContent = pContent[tagClose + 1:]
-            
-        else:
-            pContent = pContent[:tagOpen - 1] + pContent[tagClose + 1:]
-            
-        if tagOpen == -1 or tagClose == -1:
-            break
-        
-    return pContent
+    # getting everything between the p tags
+    p_tags = re.findall(r'<p>.*</p>', html)
+    
+    # filtering out the bold, italic, and paragraph tags
+    p_tags = [re.sub(r'<[/]?[bip]>',"", x) for x in p_tags] 
+    
+    # filtering out the anchor tags
+    p_tags = [re.sub(r'<[/]?a.*>','', x) for x in p_tags]
+    paragraph_text = " ".join(p_tags)
+    return paragraph_text
  
 
     
 if __name__ == "__main__":
     with open("example.html", encoding="utf-8") as f:
         sampleHtml = f.read()
-    url_list = get_urls(sampleHtml) 
-    for a in url_list:
-        print(a)
-    
+    print(get_paragraphs(sampleHtml)) 
