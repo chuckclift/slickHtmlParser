@@ -43,11 +43,8 @@ def get_paragraphs(html):
     # getting everything between the p tags
     p_tags = re.findall(r'<p>.*</p>', html)
     
-    # filtering out the bold, italic, and paragraph tags
-    p_tags = [re.sub(r'<[/]?[bip]>',"", x) for x in p_tags] 
-    
-    # filtering out the anchor tags
-    p_tags = [re.sub(r'<[/]?a.*>','', x) for x in p_tags]
+    # filtering out the tags left inside the pargraphs
+    p_tags = [re.sub(r'<(.*?)>','', x) for x in p_tags]
     paragraph_text = "\n".join(p_tags)
     return paragraph_text
  
