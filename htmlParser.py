@@ -48,7 +48,7 @@ def get_paragraphs(html):
     
     # filtering out the anchor tags
     p_tags = [re.sub(r'<[/]?a.*>','', x) for x in p_tags]
-    paragraph_text = " ".join(p_tags)
+    paragraph_text = "\n".join(p_tags)
     return paragraph_text
  
 
